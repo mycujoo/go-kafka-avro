@@ -16,7 +16,9 @@ jobs:
         name: Install dependencies
         command: |
           go get github.com/jstemmer/go-junit-report
-          sudo apt-get install -y librdkafka-dev
+          echo "deb http://deb.debian.org/debian stretch-backports main contrib non-free" | sudo tee /etc/apt/sources.list.d/backports.list
+          sudo apt-get update
+          sudo apt-get install -y librdkafka-dev/stretch-backports
     - run:
         name: Test
         command: |
