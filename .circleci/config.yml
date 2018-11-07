@@ -17,7 +17,7 @@ jobs:
         name: Test
         command: |
           trap "go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml" EXIT
-          go test -v . -coverprofile=$(TEST_RESULTS)/coverage.out | tee ${TEST_RESULTS}/go-test.out
+          go test -v . -coverprofile=${TEST_RESULTS}/coverage.out | tee ${TEST_RESULTS}/go-test.out
     - save_cache:
         key: v1-pkg-cache
         paths:
