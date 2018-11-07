@@ -12,7 +12,11 @@ jobs:
     - restore_cache:
         keys:
         - v1-pkg-cache
-    - run: go get github.com/jstemmer/go-junit-report
+    - run:
+        name: Install dependencies
+        command: |
+          go get github.com/jstemmer/go-junit-report
+          apt-get install -y librdkafka-dev
     - run:
         name: Test
         command: |
