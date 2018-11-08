@@ -2,20 +2,9 @@ package kafkaavro_test
 
 import (
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/linkedin/goavro"
 	"github.com/mycujoo/go-kafka-avro"
 	"testing"
 )
-
-type mockSchemaRegistryClient struct{}
-
-func (mockSchemaRegistryClient) GetSchemaByID(id int) (*goavro.Codec, error) {
-	return goavro.NewCodec("string")
-}
-
-func (mockSchemaRegistryClient) RegisterNewSchema(subject string, codec *goavro.Codec) (int, error) {
-	return 1, nil
-}
 
 func TestNewProducer(t *testing.T) {
 

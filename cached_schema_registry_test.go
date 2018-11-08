@@ -14,6 +14,16 @@ import (
 
 // Portions of the code are taken from https://github.com/dangkaka/go-kafka-avro
 
+type mockSchemaRegistryClient struct{}
+
+func (mockSchemaRegistryClient) GetSchemaByID(id int) (*goavro.Codec, error) {
+	return goavro.NewCodec("string")
+}
+
+func (mockSchemaRegistryClient) RegisterNewSchema(subject string, codec *goavro.Codec) (int, error) {
+	return 1, nil
+}
+
 type TestObject struct {
 	MockServer *httptest.Server
 	Codec      *goavro.Codec
