@@ -40,3 +40,7 @@ If you provide deliverChan then call will not be blocking until delivery.
 ## Supported go versions
 
 We support only latest version, which is 1.11 at the moment.
+
+## Related
+
+Some code for cached schema registry client was based on https://github.com/dangkaka/go-kafka-avro implementation.

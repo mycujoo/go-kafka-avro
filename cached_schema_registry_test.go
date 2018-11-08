@@ -12,6 +12,8 @@ import (
 	"github.com/linkedin/goavro"
 )
 
+// Portions of the code are taken from https://github.com/dangkaka/go-kafka-avro
+
 type TestObject struct {
 	MockServer *httptest.Server
 	Codec      *goavro.Codec

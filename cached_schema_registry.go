@@ -7,6 +7,8 @@ import (
 	"github.com/linkedin/goavro"
 )
 
+// Portions of the code are taken from https://github.com/dangkaka/go-kafka-avro
+
 type SchemaRegistryClient interface {
 	GetSchemaByID(id int) (*goavro.Codec, error)
 	RegisterNewSchema(subject string, codec *goavro.Codec) (int, error)
