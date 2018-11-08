@@ -1,0 +1,38 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+    - image: circleci/golang:1.11.1
+    environment:
+      TEST_RESULTS: /tmp/test-results
+    steps:
+    - checkout
+    - run: mkdir -p $TEST_RESULTS
+    - restore_cache:
+        keys:
+        - v1-pkg-cache
+    - run:
+        name: Install dependencies
+        command: |
+          go get github.com/jstemmer/go-junit-report
+          echo "deb http://deb.debian.org/debian stretch-backports main contrib non-free" | sudo tee /etc/apt/sources.list.d/backports.list
+          sudo apt-get update
+          sudo apt-get install -y librdkafka-dev/stretch-backports
+    - run:
+        name: Test
+        command: |
+          trap "go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml" EXIT
+          go test -v . -coverprofile=${TEST_RESULTS}/coverage.out | tee ${TEST_RESULTS}/go-test.out
+    - save_cache:
+        key: v1-pkg-cache
+        paths:
+        - "/go/pkg"
+    - run:
+        name: Coverage
+        command: go tool cover -html=${TEST_RESULTS}/coverage.out -o=${TEST_RESULTS}/coverage.html
+    - store_artifacts:
+        path: /tmp/test-results
+        destination: raw-test-output
+    - store_test_results:
+        path: /tmp/test-results
