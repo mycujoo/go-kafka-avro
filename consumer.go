@@ -25,9 +25,11 @@ type ConsumerMessage struct {
 
 // NewConsumer is a basic consumer to interact with schema registry, avro and kafka
 func NewConsumer(topics []string, consumer *kafka.Consumer, schemaRegistryClient SchemaRegistryClient) (*Consumer, error) {
-	err := consumer.SubscribeTopics(topics, nil)
-	if err != nil {
-		return nil, err
+
+	if topics != nil {
+		if err := consumer.SubscribeTopics(topics, nil); err != nil {
+			return nil, err
+		}
 	}
 
 	return &Consumer{
@@ -36,6 +38,11 @@ func NewConsumer(topics []string, consumer *kafka.Consumer, schemaRegistryClient
 		pollTimeout:          100,
 		topics:               topics,
 	}, nil
+}
+
+func (ac *Consumer) SubscribeTopics(topics []string, rebalanceCb kafka.RebalanceCb) error {
+	ac.topics = topics
+	return ac.consumer.SubscribeTopics(topics, rebalanceCb)
 }
 
 // Messages returns the ConsumerMessage channel (that contains decoded messages)
