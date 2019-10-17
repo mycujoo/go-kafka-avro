@@ -1,9 +1,11 @@
 package kafkaavro_test
 
 import (
-	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/mycujoo/go-kafka-avro"
 	"log"
+
+	"github.com/confluentinc/confluent-kafka-go/kafka"
+
+	kafkaavro "github.com/mycujoo/go-kafka-avro"
 )
 
 func ExampleNewConsumer() {

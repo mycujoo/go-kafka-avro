@@ -3,7 +3,7 @@ package kafkaavro
 import (
 	"sync"
 
-	"github.com/landoop/schema-registry"
+	schemaregistry "github.com/landoop/schema-registry"
 	"github.com/linkedin/goavro"
 )
 

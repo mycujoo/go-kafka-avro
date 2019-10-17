@@ -4,8 +4,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mycujoo/go-kafka-avro"
 	"github.com/stretchr/testify/assert"
+
+	kafkaavro "github.com/mycujoo/go-kafka-avro"
 )
 
 func TestDecodeFromNative(t *testing.T) {
@@ -166,7 +167,7 @@ func TestDecodeFromNative(t *testing.T) {
 		},
 		"extra fields ignored": {
 			src: map[string]interface{}{
-				"field": "test",
+				"field":      "test",
 				"extraField": "extra",
 			},
 			dst: &withString{},

@@ -2,6 +2,7 @@ package kafkaavro
 
 import (
 	"encoding/binary"
+
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/linkedin/goavro"
 	"github.com/pkg/errors"

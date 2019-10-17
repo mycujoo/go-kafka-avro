@@ -51,8 +51,6 @@ func decodeSliceFromNative(src interface{}, dstVal reflect.Value) error {
 	return nil
 }
 
-
-
 func valueFromNative(src interface{}, value reflect.Value) error {
 	sv := reflect.ValueOf(src)
 

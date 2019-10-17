@@ -1,5 +1,7 @@
 module github.com/mycujoo/go-kafka-avro
 
+go 1.11
+
 require (
 	github.com/confluentinc/confluent-kafka-go v1.1.0
 	github.com/golang/snappy v0.0.1 // indirect

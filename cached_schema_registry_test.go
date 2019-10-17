@@ -3,13 +3,14 @@ package kafkaavro_test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/mycujoo/go-kafka-avro"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 
 	"github.com/linkedin/goavro"
+
+	kafkaavro "github.com/mycujoo/go-kafka-avro"
 )
 
 // Portions of the code are taken from https://github.com/dangkaka/go-kafka-avro
@@ -242,7 +243,7 @@ func TestCachedSchemaRegistryClient_DeleteSubject(t *testing.T) {
 	testObject := createSchemaRegistryTestObject(t, "test", 1)
 	mockServer := testObject.MockServer
 	defer mockServer.Close()
-	client, err :=kafkaavro. NewCachedSchemaRegistryClient(mockServer.URL)
+	client, err := kafkaavro.NewCachedSchemaRegistryClient(mockServer.URL)
 	if nil != err {
 		t.Errorf("Error creating cached schema registry client: %s", err.Error())
 	}
