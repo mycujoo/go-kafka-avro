@@ -44,7 +44,7 @@ If you provide deliverChan then call will not be blocking until delivery.
 
 ## Supported go versions
 
-We support only latest version, which is 1.11 at the moment.
+We support version >=1.12
 
 ## Related
 
