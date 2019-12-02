@@ -8,7 +8,6 @@ import (
 )
 
 func TestNewProducer(t *testing.T) {
-
 	kp, err := kafka.NewProducer(&kafka.ConfigMap{
 		"socket.timeout.ms":    1100,
 		"default.topic.config": kafka.ConfigMap{"message.timeout.ms": 10}})
@@ -18,7 +17,13 @@ func TestNewProducer(t *testing.T) {
 
 	srClient := &mockSchemaRegistryClient{}
 
-	p, err := kafkaavro.NewProducer("topic", "\"string\"", "\"string\"", kp, srClient)
+	p, err := kafkaavro.NewProducer(kafkaavro.ProducerConfig{
+		TopicName:            "topic",
+		KeySchema:            `"string"`,
+		ValueSchema:          `"string"`,
+		Producer:             kp,
+		SchemaRegistryClient: srClient,
+	})
 	if err != nil {
 		t.Fatalf("Error creating producer: %+v", err.Error())
 	}
