@@ -1,6 +1,6 @@
 module github.com/mycujoo/go-kafka-avro
 
-go 1.11
+go 1.12
 
 require (
 	github.com/cenkalti/backoff/v3 v3.1.1
