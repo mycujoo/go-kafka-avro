@@ -9,8 +9,16 @@ import (
 	"github.com/pkg/errors"
 )
 
+type kafkaConsumer interface {
+	Poll(timeoutMs int) (event kafka.Event)
+	SubscribeTopics(topics []string, rebalanceCb kafka.RebalanceCb) (err error)
+	Close() (err error)
+	CommitMessage(m *kafka.Message) ([]kafka.TopicPartition, error)
+	GetMetadata(topic *string, allTopics bool, timeoutMs int) (*kafka.Metadata, error)
+}
+
 type Consumer struct {
-	consumer             *kafka.Consumer
+	consumer             kafkaConsumer
 	schemaRegistryClient SchemaRegistryClient
 	stopChan             chan struct{}
 	pollTimeout          int
@@ -29,8 +37,7 @@ type ConsumerMessage struct {
 }
 
 // NewConsumer is a basic consumer to interact with schema registry, avro and kafka
-func NewConsumer(topics []string, consumer *kafka.Consumer, schemaRegistryClient SchemaRegistryClient) (*Consumer, error) {
-
+func NewConsumer(topics []string, consumer kafkaConsumer, schemaRegistryClient SchemaRegistryClient) (*Consumer, error) {
 	if topics != nil {
 		if err := consumer.SubscribeTopics(topics, nil); err != nil {
 			return nil, err
