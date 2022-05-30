@@ -170,8 +170,10 @@ func (ac *Consumer) ReadMessage(timeoutMs int) (*Message, error) {
 	if err != nil {
 		return nil, err
 	}
-	if _, err = ac.KafkaConsumer.CommitMessage(msg.Message); err != nil {
-		err = ErrFailedCommit{Err: err}
+	if msg != nil { // FetchMessage may return a nil msg
+		if _, err = ac.KafkaConsumer.CommitMessage(msg.Message); err != nil {
+			err = ErrFailedCommit{Err: err}
+		}
 	}
 	return msg, err
 }
