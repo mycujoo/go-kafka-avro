@@ -3,7 +3,7 @@ package kafkaavro
 import (
 	"sync"
 
-	"github.com/hamba/avro"
+	"github.com/hamba/avro/v2"
 	schemaregistry "github.com/landoop/schema-registry"
 )
 
