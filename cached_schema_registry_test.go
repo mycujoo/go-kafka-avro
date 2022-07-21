@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hamba/avro"
+	"github.com/hamba/avro/v2"
 	kafkaavro "github.com/mycujoo/go-kafka-avro/v2"
 )
 
