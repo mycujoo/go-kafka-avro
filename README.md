@@ -10,7 +10,7 @@ First install dependencies:
 
 To install use `go get`:
 
-    go get github.com/mycujoo/go-kafka-avro
+    go get github.com/mycujoo/go-kafka-avro/v2
 
 ## Usage
 
