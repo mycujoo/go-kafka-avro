@@ -1,9 +1,10 @@
 package kafkaavro
 
 import (
+	"encoding/json"
 	"sync"
 
-	"github.com/hamba/avro"
+	"github.com/hamba/avro/v2"
 	schemaregistry "github.com/landoop/schema-registry"
 )
 
@@ -93,10 +94,17 @@ func (cached *CachedSchemaRegistryClient) RegisterNewSchema(subject string, sche
 	if found {
 		return cachedResult, nil
 	}
-	id, err := cached.SchemaRegistryClient.RegisterNewSchema(subject, schema.String())
+
+	jsonBytes, err := json.Marshal(schema)
 	if err != nil {
 		return 0, err
 	}
+
+	id, err := cached.SchemaRegistryClient.RegisterNewSchema(subject, string(jsonBytes))
+	if err != nil {
+		return 0, err
+	}
+
 	cached.registeredSubjectsLock.Lock()
 	cached.registeredSubjects[subject] = id
 	cached.registeredSubjectsLock.Unlock()
