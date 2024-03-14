@@ -125,7 +125,7 @@ func (cached *CachedSchemaRegistryClient) SetCanonicalSchemas() {
 	cached.schemaStringFunc = CanonicalSchemaString
 }
 
-// FullSchemaString returns the full (non-canonical) JSON string representation of the given schema.
+// FullSchemaString returns the full (non-canonical) JSON-string representation of the given schema.
 func FullSchemaString(schema avro.Schema) string {
 	b, err := json.Marshal(schema)
 	if err != nil {
@@ -134,7 +134,7 @@ func FullSchemaString(schema avro.Schema) string {
 	return string(b)
 }
 
-// CanonicalSchemaString returns the full (non-canonical) JSON string representation of the given schema.
+// CanonicalSchemaString returns the canonical JSON-string representation of the given schema.
 func CanonicalSchemaString(schema avro.Schema) string {
 	return schema.String()
 }
