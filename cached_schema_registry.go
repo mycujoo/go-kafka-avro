@@ -15,6 +15,8 @@ type SchemaRegistryClient interface {
 	RegisterNewSchema(subject string, schema avro.Schema) (int, error)
 }
 
+type schemaStringer func(avro.Schema) string
+
 // CachedSchemaRegistryClient is a schema registry client that will cache some data to improve performance
 type CachedSchemaRegistryClient struct {
 	SchemaRegistryClient   *schemaregistry.Client
@@ -22,6 +24,7 @@ type CachedSchemaRegistryClient struct {
 	schemaCacheLock        sync.RWMutex
 	registeredSubjects     map[string]int
 	registeredSubjectsLock sync.RWMutex
+	schemaStringFunc       schemaStringer
 }
 
 func NewCachedSchemaRegistryClient(baseURL string, options ...schemaregistry.Option) (*CachedSchemaRegistryClient, error) {
@@ -33,6 +36,7 @@ func NewCachedSchemaRegistryClient(baseURL string, options ...schemaregistry.Opt
 		SchemaRegistryClient: srClient,
 		schemaCache:          make(map[int]avro.Schema),
 		registeredSubjects:   make(map[string]int),
+		schemaStringFunc:     FullSchemaString,
 	}, nil
 }
 
@@ -95,12 +99,7 @@ func (cached *CachedSchemaRegistryClient) RegisterNewSchema(subject string, sche
 		return cachedResult, nil
 	}
 
-	jsonBytes, err := json.Marshal(schema)
-	if err != nil {
-		return 0, err
-	}
-
-	id, err := cached.SchemaRegistryClient.RegisterNewSchema(subject, string(jsonBytes))
+	id, err := cached.SchemaRegistryClient.RegisterNewSchema(subject, cached.schemaStringFunc(schema))
 	if err != nil {
 		return 0, err
 	}
@@ -113,10 +112,29 @@ func (cached *CachedSchemaRegistryClient) RegisterNewSchema(subject string, sche
 
 // IsSchemaRegistered checks if a specific schema is already registered to a subject
 func (cached *CachedSchemaRegistryClient) IsSchemaRegistered(subject string, schema avro.Schema) (bool, schemaregistry.Schema, error) {
-	return cached.SchemaRegistryClient.IsRegistered(subject, schema.String())
+	return cached.SchemaRegistryClient.IsRegistered(subject, cached.schemaStringFunc(schema))
 }
 
 // DeleteSubject deletes the subject, should only be used in development
 func (cached *CachedSchemaRegistryClient) DeleteSubject(subject string) (versions []int, err error) {
 	return cached.SchemaRegistryClient.DeleteSubject(subject)
+}
+
+// SetCanonicalSchemas sets the client to use canonical-form schemas.
+func (cached *CachedSchemaRegistryClient) SetCanonicalSchemas() {
+	cached.schemaStringFunc = CanonicalSchemaString
+}
+
+// FullSchemaString returns the full (non-canonical) JSON string representation of the given schema.
+func FullSchemaString(schema avro.Schema) string {
+	b, err := json.Marshal(schema)
+	if err != nil {
+		return "" // Should not happen unless there's a bug in the avro lib
+	}
+	return string(b)
+}
+
+// CanonicalSchemaString returns the full (non-canonical) JSON string representation of the given schema.
+func CanonicalSchemaString(schema avro.Schema) string {
+	return schema.String()
 }
