@@ -8,7 +8,7 @@ import (
 
 	"github.com/caarlos0/env/v6"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	"github.com/hamba/avro"
+	"github.com/hamba/avro/v2"
 	"github.com/pkg/errors"
 )
 

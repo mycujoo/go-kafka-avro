@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/hamba/avro"
+	"github.com/hamba/avro/v2"
 	kafkaavro "github.com/mycujoo/go-kafka-avro/v2"
 )
 
@@ -78,7 +78,7 @@ func createSchemaRegistryTestObject(t *testing.T, subject string, id int) *TestO
 		} else if r.Method == "GET" {
 			switch r.URL.String() {
 			case fmt.Sprintf(schemaByID, id):
-				escapedSchema := strings.Replace(schema.String(), "\"", "\\\"", -1)
+				escapedSchema := strings.Replace(kafkaavro.FullSchemaString(schema), "\"", "\\\"", -1)
 				fmt.Fprintf(w, `{"schema": "%s"}`, escapedSchema)
 			case subjects:
 				response := []string{subject}
@@ -89,7 +89,7 @@ func createSchemaRegistryTestObject(t *testing.T, subject string, id int) *TestO
 				str, _ := json.Marshal(response)
 				fmt.Fprintf(w, string(str))
 			case fmt.Sprintf(subjectByVersion, subject, "1"), fmt.Sprintf(subjectByVersion, subject, "latest"):
-				response := schemaVersionResponse{subject, 1, schema.String(), id}
+				response := schemaVersionResponse{subject, 1, kafkaavro.FullSchemaString(schema), id}
 				str, _ := json.Marshal(response)
 				fmt.Fprintf(w, string(str))
 			}
